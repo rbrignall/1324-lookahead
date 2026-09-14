@@ -1,0 +1,6 @@
+.lake/
+__pycache__/
+*.olean
+*.ilean
+checks/lean_axioms.txt
+checks/lean_build_passed.txt

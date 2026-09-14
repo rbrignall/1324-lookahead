@@ -1,0 +1,9 @@
+PASS: root isolated on [1158423/1000000, 144803/125000] by exact rational checks.
+PASS: 384 positive state weights.
+PASS: 1536 local inequalities.
+  Exactly zero:      514
+  Strictly positive: 1022
+  Distinct reduced slacks: 258
+  Distinct weight polynomials: 139
+Data SHA-256: 3526ec0d545c3c5c55b4021de177f257e57f0dd18ffdd3c6e9be53cc0e502887
+No floating-point arithmetic or optimisation was used.

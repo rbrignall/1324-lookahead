@@ -1,0 +1,28 @@
+{
+  "result": "PASS",
+  "data_sha256": "3526ec0d545c3c5c55b4021de177f257e57f0dd18ffdd3c6e9be53cc0e502887",
+  "root_interval": [
+    "1158423/1000000",
+    "144803/125000"
+  ],
+  "m_at_left": "-15454450096832389267874971/1000000000000000000000000000000",
+  "m_at_right": "1166634187142544582729/30517578125000000000000000",
+  "derivative_lower_bound": "10736515502594473884193123/200000000000000000000000",
+  "positive_state_weights": 384,
+  "distinct_weight_polynomials": 139,
+  "local_inequalities": 1536,
+  "zero_slacks": 514,
+  "positive_slacks": 1022,
+  "distinct_reduced_slacks": 258,
+  "smallest_weight_lower_bound": {
+    "state_id": "q381",
+    "lower_bound": "3815923140654444241/2441406250000000000",
+    "upper_bound": "16569198555030714269401/10000000000000000000000"
+  },
+  "smallest_positive_slack_lower_bound": {
+    "state_id": "q229",
+    "new_blue": "Bo",
+    "new_red": "R",
+    "lower_bound": "10680359135719471939241/125000000000000000000000"
+  }
+}

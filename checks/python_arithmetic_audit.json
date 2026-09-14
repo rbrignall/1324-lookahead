@@ -1,0 +1,11 @@
+{
+  "audit": "PASS: exact Python arithmetic and data consistency",
+  "lean_compilation": "NOT RUN; this report does not certify Lean elaboration",
+  "states": 384,
+  "inequalities": 1536,
+  "positive": 1022,
+  "zero": 514,
+  "distinct_weights": 139,
+  "distinct_slacks": 258,
+  "canonical_csv_sha256": "3526ec0d545c3c5c55b4021de177f257e57f0dd18ffdd3c6e9be53cc0e502887"
+}

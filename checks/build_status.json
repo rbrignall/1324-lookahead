@@ -1,0 +1,21 @@
+{
+  "lean_compilation": "NOT RUN",
+  "reason": "Lean and Lake are absent; attempts to download/install them failed because external network access from the runtime is unavailable.",
+  "tool_checks": [
+    {
+      "command": [
+        "lean",
+        "--version"
+      ],
+      "error": "[Errno 2] No such file or directory: 'lean'"
+    },
+    {
+      "command": [
+        "lake",
+        "--version"
+      ],
+      "error": "[Errno 2] No such file or directory: 'lake'"
+    }
+  ],
+  "scope_of_completed_checks": "Exact Python data/arithmetic audits only; not Lean elaboration or kernel validation."
+}

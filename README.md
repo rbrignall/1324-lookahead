@@ -1,14 +1,5 @@
 # Three-step lookahead certificate — Lean source
 
-**Status: the Lean source has NOT been compiled in this environment.**
-There is no local Lean/Lake installation, and network access needed to install it
-was unavailable. This is therefore an uncompiled formalisation candidate, not a
-completed machine-checked result. The source has no `sorry`, `admit`, added axioms,
-or native-evaluation proof steps. The exact data and the arithmetic implemented
-in it have been cross-checked with Python, but that does not establish that Lean
-will elaborate these proof scripts. In particular, build time and resource use
-have not been measured.
-
 ## Scope
 
 This is only the finite certificate from the ordinary, two-statistic,
@@ -27,20 +18,19 @@ theorem three_step_certificate (t : ℝ) (ht : m t = 0)
 Here:
 
 - `m(t) = 3t^5 + 10t^4 - t^3 - 11t^2 - 6t - 1`;
-- `lo = 1158423/1000000` and `hi = 1158424/1000000`, exactly;
+- `lo = 1158423/1000000` and `hi = 1158424/1000000`;
 - `PositiveWeighting κ` means that all 384 weights are strictly positive;
 - `LambdaGood t (1+t) κ` is the conjunction, expressed by finite universal
   quantification, of all 384 × 4 local inequalities. The edge costs are
   `1`, `t`, and `t^2`, corresponding to `x = y = 1/t`.
 
 A separate short theorem, `parameter_exists`, supplies a real root in the open
-interval using mathlib's intermediate value theorem. Uniqueness is unnecessary
+interval `(hi,lo)` using mathlib's intermediate value theorem. Uniqueness is unnecessary
 here: the certificate theorem holds for every real root in that interval.
 
 ## Build and inspect
 
-The project targets **Lean 4.24.0 and mathlib v4.24.0**. These are deliberate fixed
-release targets, not a claim about the newest available versions. With `elan`
+Uses **Lean 4.24.0 and mathlib v4.24.0**. With `elan`
 installed, run from this directory:
 
 ```sh

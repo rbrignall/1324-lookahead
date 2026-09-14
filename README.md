@@ -1,11 +1,12 @@
-# Three-step lookahead certificate — Lean source
+# Three-step lookahead inequalities — Lean source
 
-## Scope
+This repository contains a Lean formalisation to prove positivity of the inequalities
+associated with the 3-lookahead shuffle automaton used in "Shuffle automata and the growth of 1324-avoiding permutations".
 
-This is only the finite certificate from the ordinary, two-statistic,
-three-letter-lookahead argument. It does not formalise permutation avoidance,
-the weighted-transfer proposition, the domino generating function, the growth
-bound, or optimality of the parameters. It does not use the witness-depth refinement.
+**Important** This is not a formalisation of the proof that gr(Av(1324)) ≤ 13.16. 
+This repository verifies the correctness of the part of the argument that would be 
+time-consuming to check by hand, namely the 1536 inequalities that must be satisfied
+for a state weighting κ to be λ-good.
 
 The central theorem in `ThreeStep/Certificate.lean` is:
 
@@ -18,17 +19,16 @@ theorem three_step_certificate (t : ℝ) (ht : m t = 0)
 Here:
 
 - `m(t) = 3t^5 + 10t^4 - t^3 - 11t^2 - 6t - 1`;
-- `lo = 1158423/1000000` and `hi = 1158424/1000000`;
+- `lo = 1158423/1000000` and `hi = 1158424/1000000` (there is a zero of `m(t)` in `(hi,lo)`;
 - `PositiveWeighting κ` means that all 384 weights are strictly positive;
 - `LambdaGood t (1+t) κ` is the conjunction, expressed by finite universal
   quantification, of all 384 × 4 local inequalities. The edge costs are
   `1`, `t`, and `t^2`, corresponding to `x = y = 1/t`.
 
-A separate short theorem, `parameter_exists`, supplies a real root in the open
-interval `(hi,lo)` using mathlib's intermediate value theorem. Uniqueness is unnecessary
-here: the certificate theorem holds for every real root in that interval.
+A separate short theorem, `parameter_exists`, supplies a real root of `m(t)` in the open
+interval `(hi,lo)` using mathlib's intermediate value theorem. Note that existence of a root is sufficient.
 
-## Build and inspect
+## Build
 
 Uses **Lean 4.24.0 and mathlib v4.24.0**. With `elan`
 installed, run from this directory:
@@ -43,11 +43,8 @@ bash check.sh
 Lean table, runs `lake build`, and invokes `Audit.lean`. It rejects an axiom report
 containing anything other than `propext`, `Classical.choice`, and `Quot.sound`.
 In particular, `sorryAx` or a native-computation axiom is not accepted.
-The script creates `checks/lean_build_passed.txt` only after these commands succeed;
-that file is intentionally absent from this delivery.
+The script creates `checks/lean_build_passed.txt` after these commands succeed.
 
-After the first successful dependency resolution, retain `lake-manifest.json`
-with a release of this project to lock all resolved dependency revisions.
 A GitHub Actions workflow is included to perform the same build when these files
 are placed at the root of a repository. No repository has been created or CI run
 as part of this delivery.
@@ -71,7 +68,7 @@ comments and blank lines.
 
 ## Correspondence with the paper
 
-`State` is `Fin 6 × Fin 8 × Fin 8`. The six histories, in order, are
+`State` is `Fin 6 × Fin 8 × Fin 8`. The six underlying states, in order, are
 
 ```
 0: (N,Bo,Ro)   1: (N,Bo,R)   2: (N,B,Ro)
@@ -105,7 +102,7 @@ The CSV is byte-for-byte unchanged, with SHA-256:
 `timesT` maps the coefficients of `p` to those of `t*p`, reduced modulo `m`.
 `eval_timesT` proves this is sound at every real root of `m` by a polynomial
 identity. Applying it twice accounts for the `t^2` transition cost. Addition and
-subtraction of coefficients then construct each slack from the transition rules.
+subtraction of coefficients then construct each inequality from the transition rules.
 
 `lower p` uses the lower interval endpoint for every nonnegative coefficient and
 the upper endpoint for every negative coefficient. `lower_le_eval` proves over
@@ -141,7 +138,4 @@ the results against the existing verifier's output:
 
 Results are recorded in `checks/python_arithmetic_audit.json`. The original exact
 Python verifier was also rerun, with its output in `checks/python-verification/`.
-Neither check is a substitute for the **still outstanding Lean build**.
 
-Until `bash check.sh` completes successfully, the paper should not describe this
-artifact as a Lean-verified certificate.

@@ -1,9 +1,16 @@
-import Mathlib
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.Order.GroupWithZero.Basic
+import Mathlib.Data.Fin.VecNotation
+import Mathlib.Data.Rat.BigOperators
+import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.NormCast
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
 
 set_option autoImplicit false
 
-/-! Elementary exact arithmetic for the certificate. No algebraic-number type
-is needed: `t` is real, with a polynomial equation and rational bounds. -/
+/-! Elementary arithmetic for the certificate. 
+Note: `t` is real and belongs to the interval (hi,lo). -/
 namespace ThreeStep
 
 abbrev Coeffs := Fin 5 → ℚ
@@ -38,7 +45,7 @@ lemma eval_timesT {t : ℝ} (ht : m t = 0) (p : Coeffs) :
       norm_num [eval, timesT, Fin.sum_univ_succ, h3, h4, m]; ring
     _ = t * eval p t := by rw [ht]; ring
 
-/-- A termwise lower bound; negative coefficients use the upper endpoint. -/
+/-- A termwise lower bound, as specified in the proof of Proposition 4.3. -/
 def lower (p : Coeffs) : ℚ :=
   ∑ i : Fin 5, p i * (if 0 ≤ p i then lo else hi)^i.val
 

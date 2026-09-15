@@ -2,10 +2,11 @@ import ThreeStep.Data
 
 set_option autoImplicit false
 
-/-! The ordinary three-letter-lookahead certificate (no witness-depth refinement).
+/-! The ordinary three-letter-lookahead certificate.
 The six histories are (N,Bo,Ro), (N,Bo,R), (N,B,Ro), (N,B,R), (B,B,Ro), (B,B,R).
-A bit is 0 for circled and 1 for internal. Window heads are the most significant bit.
-All finite checks below use kernel reduction, not `native_decide`. -/
+A bit is 0 for circled and 1 for internal. 
+First letter on the tape is the most significant bit.
+All finite checks below use kernel reduction. -/
 namespace ThreeStep
 
 abbrev Bit := Fin 2
@@ -40,7 +41,7 @@ def redNext (q : State) (c : Bit) : State :=
       omega⟩,
    q.2.1, shift q.2.2 c)
 
-/-- These are precisely the appendix's coefficients, without rescaling. -/
+/-- These are precisely the appendix's coefficients. -/
 def weight (q : State) : Coeffs :=
   weightPolynomials (weightIndex q.1 q.2.1 q.2.2)
 noncomputable def kappa (t : ℝ) (q : State) : ℝ := eval (weight q) t
@@ -90,8 +91,8 @@ private theorem checked (h : Fin 6) :
     (∀ (U L : Window) (b r : Bit), 0 ≤ lower (slack (h,U,L) b r)) := by
   fin_cases h <;> decide +kernel
 
-/-- The finite assertion needed by the paper: 384 positive weights and all
-1536 local λ-good inequalities. No claim about permutation growth is formalised here. -/
+/-- Assertion needed by the paper: 384 positive weights and
+all 1536 local λ-good inequalities. -/
 theorem three_step_certificate (t : ℝ) (ht : m t = 0)
     (hlo : (lo : ℝ) < t) (hhi : t < (hi : ℝ)) :
     PositiveWeighting (kappa t) ∧ LambdaGood t (1+t) (kappa t) := by

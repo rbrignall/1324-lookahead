@@ -1,12 +1,11 @@
 import ThreeStep.Data
 import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Omega
 
 set_option autoImplicit false
 
 /-! The ordinary three-letter-lookahead certificate.
 The six histories are (N,Bo,Ro), (N,Bo,R), (N,B,Ro), (N,B,R), (B,B,Ro), (B,B,R).
-A bit is 0 for circled and 1 for internal. 
+A bit is 0 for circled and 1 for internal.
 First letter on the tape is the most significant bit.
 All finite checks below use kernel reduction. -/
 namespace ThreeStep

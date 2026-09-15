@@ -1,15 +1,14 @@
 import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Order.GroupWithZero.Basic
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Data.Fin.VecNotation
 import Mathlib.Data.Rat.BigOperators
 import Mathlib.Data.Real.Basic
-import Mathlib.Tactic.NormCast
 import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Ring
 
 set_option autoImplicit false
 
-/-! Elementary arithmetic for the certificate. 
+/-! Elementary arithmetic for the certificate.
 Note: `t` is real and belongs to the interval (hi,lo). -/
 namespace ThreeStep
 

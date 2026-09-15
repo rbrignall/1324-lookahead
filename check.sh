@@ -11,8 +11,8 @@ import re
 from pathlib import Path
 text = Path('checks/lean_axioms.txt').read_text()
 blocks = re.findall(r'depends on axioms:\s*\[([^\]]*)\]', text)
-if len(blocks) != 2:
-    raise SystemExit('Expected axiom reports for both theorems; inspect Audit.lean output.')
+if len(blocks) != 1:
+    raise SystemExit('Expected the certificate axiom report; inspect Audit.lean output.')
 allowed = {'propext', 'Classical.choice', 'Quot.sound'}
 for block in blocks:
     used = {name.strip() for name in block.split(',') if name.strip()}

@@ -1,4 +1,6 @@
 import ThreeStep.Data
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.Omega
 
 set_option autoImplicit false
 
@@ -107,24 +109,5 @@ theorem three_step_certificate (t : ℝ) (ht : m t = 0)
     have hs := hp.trans (lower_le_eval (slack q b r) hlo.le hhi.le)
     rw [eval_slack ht] at hs
     exact sub_nonneg.mp hs
-
-/-- The root hypotheses are satisfiable, by the intermediate value theorem.
-Uniqueness is not needed for the finite certificate theorem. -/
-theorem parameter_exists : ∃ t : ℝ, m t = 0 ∧ (lo : ℝ) < t ∧ t < (hi : ℝ) := by
-  have ha : m (lo : ℝ) < 0 := by norm_num [m, lo]
-  have hb : 0 < m (hi : ℝ) := by norm_num [m, hi]
-  have hab : (lo : ℝ) ≤ (hi : ℝ) := by norm_num [lo, hi]
-  have hc : Continuous m := by unfold m; fun_prop
-  obtain ⟨t, ⟨hlt, htu⟩, ht⟩ :=
-    intermediate_value_Icc hab hc.continuousOn ⟨ha.le, hb.le⟩
-  refine ⟨t, ht, ?_, ?_⟩
-  · rcases eq_or_lt_of_le hlt with h | h
-    · rw [← h] at ht
-      exact False.elim (ha.ne ht)
-    · exact h
-  · rcases eq_or_lt_of_le htu with h | h
-    · rw [h] at ht
-      exact False.elim (hb.ne' ht)
-    · exact h
 
 end ThreeStep

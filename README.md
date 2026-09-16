@@ -25,8 +25,6 @@ Here:
   quantification, of all 384 × 4 local inequalities. The edge costs are
   `1`, `t`, and `t^2`, corresponding to `x = y = 1/t`.
 
-A separate short theorem, `parameter_exists`, supplies a real root of `m(t)` in the open
-interval `(hi,lo)` using mathlib's intermediate value theorem. Note that existence of a root is sufficient.
 
 ## Build
 
@@ -45,9 +43,7 @@ containing anything other than `propext`, `Classical.choice`, and `Quot.sound`.
 In particular, `sorryAx` or a native-computation axiom is not accepted.
 The script creates `checks/lean_build_passed.txt` after these commands succeed.
 
-A GitHub Actions workflow is included to perform the same build when these files
-are placed at the root of a repository. No repository has been created or CI run
-as part of this delivery.
+A GitHub Actions workflow is included to perform the same build when these files are placed at the root of a repository. 
 
 ## Small source layout
 
@@ -55,16 +51,14 @@ as part of this delivery.
 |---|---|
 | `ThreeStep/Arithmetic.lean` | Five rational coefficients, evaluation, one reduction identity, and the elementary termwise lower-bound lemma. |
 | `ThreeStep/Data.lean` | Generated dictionary of 139 weight polynomials and the six 8×8 lookup tables. |
-| `ThreeStep/Certificate.lean` | State and transition definitions, finite rational checks, the real inequality theorem, and root existence. |
+| `ThreeStep/Certificate.lean` | State and transition definitions, finite rational checks, and the real inequality theorem. |
 | `ThreeStep.lean` | Library entry point. |
 | `Audit.lean` | Prints the theorem axiom dependencies and checks the two case-count lemmas. |
 | `data/three_step_weights.csv` | The unchanged canonical appendix data. |
 | `tools/generate_data.py` | Recreates the Lean data file; `--check` makes no changes. |
 | `tools/audit_data.py` | An independent exact **Python** data/arithmetic audit, not a Lean checker. |
 
-There are 186 lines of mathematical Lean definitions/proof scripts in Arithmetic
-and Certificate combined, and 216 lines in the generated data file, including
-comments and blank lines.
+
 
 ## Correspondence with the paper
 
@@ -76,11 +70,11 @@ comments and blank lines.
 ```
 
 A three-letter window is its binary index from 0 to 7: 0 is circled, 1 is internal,
-and the head is the most significant bit. Thus `head w = w/4`, and revealing a bit
-`c` after consuming the head updates the window to `(2*w+c) mod 8`.
+and the first letter (head) is the most significant bit. Thus `head w = w/4`, and revealing a bit
+`c` after reading the head updates the window to `(2*w+c) mod 8`.
 The four newly revealed pairs are `Fin 2 × Fin 2`.
 
-The transitions are *defined*, not provided in a precomputed list:
+The transitions are defined as follows:
 
 - A blue move sets the output history and last blue letter to the current blue
   head, retains the red history, and shifts only the blue window.
@@ -91,13 +85,13 @@ The transitions are *defined*, not provided in a precomputed list:
 
 `weightIndex` uses zero-based polynomial indices: index `j` is the printed
 polynomial `w_(j+1)`. Comments on every polynomial row give its printed name.
-The CSV is byte-for-byte unchanged, with SHA-256:
+The CSV has SHA-256:
 
 ```
 3526ec0d545c3c5c55b4021de177f257e57f0dd18ffdd3c6e9be53cc0e502887
 ```
 
-## Why the finite computation implies the real inequalities
+## Finite computational tools for the inequalities
 
 `timesT` maps the coefficients of `p` to those of `t*p`, reduced modulo `m`.
 `eval_timesT` proves this is sound at every real root of `m` by a polynomial

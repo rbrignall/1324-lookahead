@@ -2,9 +2,11 @@
 # Run after `lake update` and `lake exe cache get`.
 set -euo pipefail
 cd "$(dirname "$0")"
+mkdir -p checks
+# Tidy up from previous runs
+rm -f checks/lean_build_passed.txt checks/lean_axioms.txt
 python3 tools/generate_data.py --check
 lake build
-mkdir -p checks
 lake env lean Audit.lean | tee checks/lean_axioms.txt
 python3 - <<'PY'
 import re

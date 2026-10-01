@@ -1,13 +1,12 @@
 # Three-step lookahead inequalities — Lean source
 
 This repository contains a Lean formalisation of Proposition 5.3 in "Shuffle automata and 
-the growth of 1324-avoiding permutations", proving positivity of the inequalities
-associated with the 3-lookahead shuffle automaton.
+the growth of 1324-avoiding permutations". It proves that the state weights in Appendix B are
+strictly positive, and that the resulting 1536 λ-good inequalities hold.
 
 **Important** This is not a formalisation of the proof that gr(Av(1324)) ≤ 13.167248. 
-This repository only verifies Proposition 5.3, being the part of the argument that would be 
-time-consuming to check by hand, namely the 1536 inequalities that must be satisfied
-for a state weighting κ to be λ-good.
+This repository only verifies the part of the argument that would be 
+time-consuming to check by hand.
 
 The central theorem in `ThreeStep/Certificate.lean` is:
 
@@ -20,8 +19,10 @@ theorem three_step_certificate (t : ℝ) (ht : m t = 0)
 Here:
 
 - `m(t) = 3t^5 + 10t^4 - t^3 - 11t^2 - 6t - 1`;
-- `lo = 1158423/1000000` and `hi = 1158424/1000000` (there is a zero of `m(t)` in `(hi,lo)`;
-- `PositiveWeighting κ` means that all 384 weights are strictly positive;
+- `lo = 1158423/1000000` and `hi = 1158424/1000000`; 
+   the theorem assumes `lo < t < hi`. The paper establishes
+  that `m(t)` has a unique real root in this interval (see footnote 3).
+  `PositiveWeighting κ` means that all 384 weights are strictly positive;
 - `LambdaGood t (1+t) κ` is the conjunction, expressed by finite universal
   quantification, of all 384 × 4 local inequalities. The edge costs are
   `1`, `t`, and `t^2`, corresponding to `x = y = 1/t`.
@@ -33,7 +34,6 @@ Uses **Lean 4.24.0 and mathlib v4.24.0**. With `elan`
 installed, run from this directory:
 
 ```sh
-lake update
 lake exe cache get
 bash check.sh
 ```
@@ -47,8 +47,6 @@ A GitHub Actions workflow is included to perform the same build when these files
 
 ## Files
 
-Besides the three `.lean` files, 
-
 | File | Role |
 |---|---|
 | `ThreeStep/Arithmetic.lean` | Five rational coefficients, evaluation, one reduction identity, and the elementary termwise lower-bound lemma. |
@@ -57,7 +55,7 @@ Besides the three `.lean` files,
 | `ThreeStep.lean` | Library entry point. |
 | `Audit.lean` | Prints the theorem axiom dependencies and checks the two case-count lemmas. |
 | `data/three_step_weights.csv` | Weights for the 384 states, as given in Appendix B. |
-| `tools/generate_data.py` | Auxiliary python script to recreate `Data.lean` from the `.csv` file; option `--check` makes no changes but verifies `Data.lean` is correct. |
+| `tools/generate_data.py` | Auxiliary python script to recreate `Data.lean` from the `.csv` file; option `--check` makes no changes but verifies `Data.lean` matches the data in `data/three_step_weights.csv`. Note: this script is not required for the Lean verification process. |
 
 
 

@@ -9,7 +9,7 @@ import Mathlib.Tactic.Ring
 set_option autoImplicit false
 
 /-! Elementary arithmetic.
-Note: `t` is real and belongs to the interval (hi,lo). -/
+Note: `t` is real and belongs to the interval (lo,hi). -/
 namespace ThreeStep
 
 abbrev Coeffs := Fin 5 → ℚ

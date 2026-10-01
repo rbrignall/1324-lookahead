@@ -50,8 +50,8 @@ A GitHub Actions workflow is included to perform the same build when these files
 | File | Role |
 |---|---|
 | `ThreeStep/Arithmetic.lean` | Five rational coefficients, evaluation, one reduction identity, and the elementary termwise lower-bound lemma. |
-| `ThreeStep/Data.lean` | Generated dictionary of 139 weight polynomials and the six 8×8 lookup tables. |
-| `ThreeStep/Certificate.lean` | State and transition definitions, finite rational checks, and the real inequality theorem. |
+| `ThreeStep/Data.lean` | Generated dictionary of 139 weight polynomials and the six 8×8 lookup tables. Use `generate_data.py` to build this file from `three_step_weights.csv`. |
+| `ThreeStep/Certificate.lean` | State and transition definitions, finite rational checks, and the main theorem. |
 | `ThreeStep.lean` | Library entry point. |
 | `Audit.lean` | Prints the theorem axiom dependencies and checks the two case-count lemmas. |
 | `data/three_step_weights.csv` | Weights for the 384 states, as given in Appendix B. |

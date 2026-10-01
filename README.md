@@ -1,10 +1,11 @@
 # Three-step lookahead inequalities — Lean source
 
-This repository contains a Lean formalisation to prove positivity of the inequalities
-associated with the 3-lookahead shuffle automaton used in "Shuffle automata and the growth of 1324-avoiding permutations".
+This repository contains a Lean formalisation of Proposition 5.3 in "Shuffle automata and 
+the growth of 1324-avoiding permutations", proving positivity of the inequalities
+associated with the 3-lookahead shuffle automaton.
 
-**Important** This is not a formalisation of the proof that gr(Av(1324)) ≤ 13.16. 
-This repository verifies the correctness of the part of the argument that would be 
+**Important** This is not a formalisation of the proof that gr(Av(1324)) ≤ 13.167248. 
+This repository only verifies Proposition 5.3, being the part of the argument that would be 
 time-consuming to check by hand, namely the 1536 inequalities that must be satisfied
 for a state weighting κ to be λ-good.
 
@@ -38,14 +39,15 @@ bash check.sh
 ```
 
 `check.sh` regenerates the expected data in memory, checks it against the saved
-Lean table, runs `lake build`, and invokes `Audit.lean`. It rejects an axiom report
-containing anything other than `propext`, `Classical.choice`, and `Quot.sound`.
-In particular, `sorryAx` or a native-computation axiom is not accepted.
+Lean table, runs `lake build`, and invokes `Audit.lean`. It does not accept any axiom reports
+that contain anything other than `propext`, `Classical.choice`, and `Quot.sound`.
 The script creates `checks/lean_build_passed.txt` after these commands succeed.
 
 A GitHub Actions workflow is included to perform the same build when these files are placed at the root of a repository. 
 
-## Small source layout
+## Files
+
+Besides the three `.lean` files, 
 
 | File | Role |
 |---|---|
@@ -54,34 +56,32 @@ A GitHub Actions workflow is included to perform the same build when these files
 | `ThreeStep/Certificate.lean` | State and transition definitions, finite rational checks, and the real inequality theorem. |
 | `ThreeStep.lean` | Library entry point. |
 | `Audit.lean` | Prints the theorem axiom dependencies and checks the two case-count lemmas. |
-| `data/three_step_weights.csv` | The unchanged canonical appendix data. |
-| `tools/generate_data.py` | Recreates the Lean data file; `--check` makes no changes. |
-| `tools/audit_data.py` | An independent exact **Python** data/arithmetic audit, not a Lean checker. |
+| `data/three_step_weights.csv` | Weights for the 384 states, as given in Appendix B. |
+| `tools/generate_data.py` | Auxiliary python script to recreate `Data.lean` from the `.csv` file; option `--check` makes no changes but verifies `Data.lean` is correct. |
 
 
 
 ## Correspondence with the paper
 
-`State` is `Fin 6 × Fin 8 × Fin 8`. The six underlying states, in order, are
+`State` is `Fin 6 × Fin 8 × Fin 8`. The six underlying states correspond to set H in the paper, and in order are
 
 ```
 0: (N,Bo,Ro)   1: (N,Bo,R)   2: (N,B,Ro)
 3: (N,B,R)     4: (B,B,Ro)    5: (B,B,R).
 ```
 
-A three-letter window is its binary index from 0 to 7: 0 is circled, 1 is internal,
-and the first letter (head) is the most significant bit. Thus `head w = w/4`, and revealing a bit
-`c` after reading the head updates the window to `(2*w+c) mod 8`.
+The first component is the _output history_, and the second and third components are the _last blue letter_  and _last red letter_, respectively.
+
+For each of the lookahead components, the three letters are encoded using a binary index from 0 to 7: 0 for circled letters, 1 for internal letters,
+and the first letter (the _head_ of the corresponding input tape) is the leftmost bit. See Appendix B of the accompanying paper for a complete mapping. Thus `head w = w/4`, and revealing a bit `c` after reading the head updates the window to `(2*w+c) mod 8`.
 The four newly revealed pairs are `Fin 2 × Fin 2`.
 
 The transitions are defined as follows:
 
-- A blue move sets the output history and last blue letter to the current blue
-  head, retains the red history, and shifts only the blue window.
-- A red move sets output history to `N`, retains the blue history, updates the red
-  history, and shifts only the red window.
-- The red term is absent exactly when the previous output and current red head
-  are both internal (the forbidden `BR` factor).
+- A blue move sets the output history to `B` if the current blue head is `B` and `N` otherwise, updates the last blue letter, and retains the last red letter; the blue lookahead component is updated to reveal the next letter.
+- A red move sets the output history to `N`, retains the last blue letter, updates the last red
+  letter, and updates the red lookahead component.
+- Red moves are forbidden exactly when the output history is `B` and the current red head is `R`.
 
 `weightIndex` uses zero-based polynomial indices: index `j` is the printed
 polynomial `w_(j+1)`. Comments on every polynomial row give its printed name.
@@ -101,35 +101,9 @@ subtraction of coefficients then construct each inequality from the transition r
 `lower p` uses the lower interval endpoint for every nonnegative coefficient and
 the upper endpoint for every negative coefficient. `lower_le_eval` proves over
 `ℝ` that this rational number is a lower bound for `p(t)` throughout the interval.
-No endpoint sampling or floating-point estimates occur.
 
 The private finite theorem `checked` asks Lean to establish that every state-weight
 lower bound is positive and every reduced-slack lower bound is nonnegative.
-It splits the check into six histories and uses `decide +kernel`, not
-`native_decide`. An exactly zero remainder has lower bound exactly zero and needs
-no special branch. The public theorem combines these finite checks with the two
-soundness lemmas. It does not accept precomputed assertions of the inequalities.
-
-## Checks actually run for this delivery
-
-```sh
-python tools/generate_data.py --check
-python tools/audit_data.py
-```
-
-These exact Python checks passed. The audit reads the literal polynomial and index
-tables back from the generated Lean file and reconstructs all 384 weights. It
-reconstructs all 1536 transitions and slacks with the numerical state coding,
-compares reduction by `timesT` against ordinary polynomial division, and compares
-the results against the existing verifier's output:
-
-```
-384 positive state-weight lower bounds
-1536 nonnegative reduced-slack lower bounds
-514 zero slacks, 1022 strictly positive slacks
-139 distinct weight polynomials, 258 distinct reduced slacks
-```
-
-Results are recorded in `checks/python_arithmetic_audit.json`. The original exact
-Python verifier was also rerun, with its output in `checks/python-verification/`.
-
+It splits the check into six histories and uses `decide +kernel`. 
+The public theorem combines these finite checks with the two
+soundness lemmas above. 

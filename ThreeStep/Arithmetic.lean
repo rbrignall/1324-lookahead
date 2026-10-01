@@ -8,7 +8,7 @@ import Mathlib.Tactic.Ring
 
 set_option autoImplicit false
 
-/-! Elementary arithmetic for the certificate.
+/-! Elementary arithmetic.
 Note: `t` is real and belongs to the interval (hi,lo). -/
 namespace ThreeStep
 
@@ -44,7 +44,7 @@ lemma eval_timesT {t : ℝ} (ht : m t = 0) (p : Coeffs) :
       norm_num [eval, timesT, Fin.sum_univ_succ, h3, h4, m]; ring
     _ = t * eval p t := by rw [ht]; ring
 
-/-- A termwise lower bound, as specified in the proof of Proposition 4.3. -/
+/-- A termwise lower bound, as specified in the proof of Proposition 5.3. -/
 def lower (p : Coeffs) : ℚ :=
   ∑ i : Fin 5, p i * (if 0 ≤ p i then lo else hi)^i.val
 

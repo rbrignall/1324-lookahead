@@ -3,10 +3,10 @@ import Mathlib.Tactic.FinCases
 
 set_option autoImplicit false
 
-/-! The ordinary three-letter-lookahead certificate.
+/-! Three-letter-lookahead automaton.
 The six histories are (N,Bo,Ro), (N,Bo,R), (N,B,Ro), (N,B,R), (B,B,Ro), (B,B,R).
 A bit is 0 for circled and 1 for internal.
-First letter on the tape is the most significant bit.
+First letter on the tape (head) is the leftmost bit.
 All finite checks below use kernel reduction. -/
 namespace ThreeStep
 
@@ -47,7 +47,7 @@ def weight (q : State) : Coeffs :=
   weightPolynomials (weightIndex q.1 q.2.1 q.2.2)
 noncomputable def kappa (t : ℝ) (q : State) : ℝ := eval (weight q) t
 
-/-- At x=y=1/t: circled letters cost 1, continuations t, and run starts t². -/
+/-- At x=y=1/t: circled letters cost 1, run continuations t, and run starts t². -/
 noncomputable def cost (t : ℝ) (previous current : Bit) : ℝ :=
   if current = 0 then 1 else if previous = 0 then t^2 else t
 
@@ -72,7 +72,7 @@ def LambdaGood (t lambda : ℝ) (κ : State → ℝ) : Prop :=
   ∀ (q : State) (b r : Bit), outgoing t κ q b r ≤ lambda * κ q
 
 /-- Reduced coefficients of (1+t)κ(q) minus the outgoing weighted sum.
-Successors and exponents are computed from the transition rules, not supplied as data. -/
+Successors and exponents are computed from the transition rules. -/
 def slack (q : State) (b r : Bit) : Coeffs :=
   weight q + timesT (weight q) -
   charge (previousBlue q.1) (head q.2.1) (weight (blueNext q b)) -
@@ -92,8 +92,8 @@ private theorem checked (h : Fin 6) :
     (∀ (U L : Window) (b r : Bit), 0 ≤ lower (slack (h,U,L) b r)) := by
   fin_cases h <;> decide +kernel
 
-/-- Assertion needed by the paper: 384 positive weights and
-all 1536 local λ-good inequalities. -/
+/-- Assertion needed for Proposition 5.3: 384 positive weights and
+all 1536 λ-good inequalities satisfied. -/
 theorem three_step_certificate (t : ℝ) (ht : m t = 0)
     (hlo : (lo : ℝ) < t) (hhi : t < (hi : ℝ)) :
     PositiveWeighting (kappa t) ∧ LambdaGood t (1+t) (kappa t) := by
